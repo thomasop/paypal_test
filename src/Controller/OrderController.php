@@ -117,7 +117,9 @@ class OrderController extends AbstractController
                 'success',
                 'Produit supprimé de la commande en cours !'
             );
-            return $this->redirectToRoute('product');
+            return $this->redirectToRoute('display_order', [
+                'id' => $user
+            ]);
         }
         return $this->redirectToRoute('product');
         

@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProductController!{% endblock %}
+
+{% block body %}
+{% include 'header.html.twig' %}
+{% include 'flash.html.twig' %}
+<main class="container">
+    <h1 class="text-center mt-5 mb-5">Produits</h1>
+    {% if app.user %}
+        {% if is_granted('ROLE_ADMIN') %}
+            <button id="myInput" type="button" class="btn btn-primary mt-5 mb-5" data-toggle="modal" data-target="#exampleModal">
+                Ajouter un nouveau produit
+            </button>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ajouter un produit</h5>
+                            <button id="close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                                {{ form_start(form) }}
+                                    <section class="text-danger">{{ form_errors(form) }}</section>
+                                    <section class="form-group">
+                                        <div class="text-danger">{{ form_errors(form.title) }}</div>
+                                        {{ form_label(form.title) }}
+                                        <div>{{ form_widget(form.title, { 'attr': {'class': 'form-control'} }) }}</div>
+                                        <small class="form-text text-muted">{{ form_help(form.title) }}</small>
+                                    </section>
+                                    <section class="form-group">
+                                        <div class="text-danger">{{ form_errors(form.image) }}</div>
+                                        {{ form_label(form.image) }}
+                                        <div>{{ form_widget(form.image, { 'attr': {'class': 'form-control'} }) }}</div>
+                                        <small class="form-text text-muted">{{ form_help(form.image) }}</small>
+                                    </section>
+                                    <section class="form-group">
+                                        <div class="text-danger">{{ form_errors(form.price) }}</div>
+                                        {{ form_label(form.price) }}
+                                        <div>{{ form_widget(form.price, { 'attr': {'class': 'form-control'} }) }}</div>
+                                        <small class="form-text text-muted">{{ form_help(form.price) }}</small>
+                                    </section>
+                                    <button class="btn btn-outline-primary" type="submit">Ajouter</button>
+                                {{ form_end(form) }}
+                            </div>
+                            <div class="modal-footer">
+                            <button id="closeFooter" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+    <section class="d-flex flex-wrap">
+        {% if product|length > 0 %}
+            {% for p in product %}
+            <div class="mb-1 posts border margin-right border-3 rounded border-primary">
+                <img class="card-image pg" src="{{ asset('uploads/thumbnail/' ~ p.image) }}" alt="Produit">
+                <div class="card-body">
+                    <p class="text-center font-weight-bold">{{ p.title }}</p>
+                    <div class="d-flex justify-content-around">
+                        <p class="text-center">{{ p.price }}</p>
+                        <div class="text-center">
+                            <a class="btn btn-outline-primary" href="{{ path('prod', {id: p.id}) }}">Lire la suite</a>
+                            {% if app.user %}
+                                {% if (is_granted('ROLE_USER')) and (is_granted('ROLE_ADMIN')) %}
+                                    <a class="btn btn-outline-primary" href="{{ path('cart_add', {id: p.id}) }}">Ajouter au panier</a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div>
+                <p class="mt-5 mb-5">Aucun produit en vente actuellement</p>
+            </div>
+        {% endif %}
+    </section>
+    {% if product|length > 6 %}
+        <article class="text-center mt-3">
+            <a class="btn btn-outline-primary" href="#" id="loadMoreproduit">Plus de produits<i class="fas fa-plus-circle fa-3x"></i></a>
+            <a class="btn btn-outline-primary" href="#" id="loadLessproduit">Moins de produits<i class="fas fa-minus-circle fa-3x"></i></a>              
+        </article>
+    {% endif %}
+</main>
+{% include 'footer.html.twig' %}
+{% endblock %}

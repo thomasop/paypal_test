@@ -3,11 +3,13 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Parameter;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -56,6 +58,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->add($user, true);
     }
 
+    public function search($pseudo)
+    {
+        $query = $this->createQueryBuilder('u');
+        // user with pseudo
+        if ($pseudo != null) {
+            $query->select('u')
+            ->Where('MATCH_AGAINST(u.pseudo) AGAINST(:pseudo boolean)>0')
+            ->setParameters(new ArrayCollection([
+                new Parameter('pseudo', '*' . $pseudo . '*')
+            ]));
+            return $query->getQuery()->getResult();
+        }
+        // all users
+        if ($pseudo == null) {
+            $query->select('u');
+            return $query->getQuery()->getResult();
+        }
+    }
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

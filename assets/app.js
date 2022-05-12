@@ -18,3 +18,44 @@ export const app = startStimulusApp(require.context(
 import { Tooltip, Toast, Popover } from 'bootstrap';
 // start the Stimulus application
 import './bootstrap';
+
+const $ = require('jquery');
+//for less or more post in home
+$(function () {
+    $("div.posts").slice(6).hide();
+    if ($("div.posts").length < 7) {
+        $("#loadMoreproduit").hide();
+        $("#loadLessproduit").hide();
+    }
+    $("#loadLessproduit").hide();
+    $("#loadMoreproduit").on('click', function(e){
+        e.preventDefault();
+        $("div.posts:hidden").slice(0, 6).slideDown();
+        $("#loadLessproduit").show();
+        if ($("div.posts:hidden").length === 0) {
+            $("#loadMoreproduit").hide();
+            $("#loadLessproduit").show();
+        }
+    });
+    $("#loadLessproduit").on('click', function(e){
+        e.preventDefault();
+        $("div.posts").slice(6, $("div.posts").length).hide();
+        $("#loadLessproduit").hide();
+        $("#loadMoreproduit").show();
+    });
+});
+
+
+//for modal bootstrap
+const container = document.getElementById("exampleModal");
+const modal = new bootstrap.Modal(container);
+
+document.getElementById("myInput").addEventListener("click", function () {
+    modal.show();
+});
+document.getElementById("close").addEventListener("click", function () {
+    modal.hide();
+});
+document.getElementById("closeFooter").addEventListener("click", function () {
+    modal.hide();
+});

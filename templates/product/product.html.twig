@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}produit{% endblock %}
+
+{% block body %}
+{% include 'header.html.twig' %}
+{% include 'flash.html.twig' %}
+<div class="container">
+    <div class="row">
+        <section>
+            <h1 class="text-center mt-5 mb-5">{{ product.title }}</h1>
+            <a class="btn btn-primary mb-5" href="{{ path('product')}}">retour a la liste des produits</a>
+        </section>
+        <section class="w-100">
+            <img class="w-100" src="{{ asset('uploads/' ~ product.image) }}"" alt="Produit">
+        </section>
+        <section>
+            <p class="mt-4">Description : </p>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perspiciatis voluptatum optio eum? Eaque at perferendis illo quos maiores pariatur voluptates magnam, animi tenetur quod rerum tempore! Rerum iste praesentium veniam.</p>
+        </section>
+        <section class="d-flex justify-content-around mt-5 mb-5">
+            {% if app.user %}
+            <a class="btn btn-outline-primary" href="">Ajouter au panier</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a class="btn btn-primary" href="{{ path('prod_update', {id: product.id}) }}">Modifier</a>
+                    {{ include('product/delete.html.twig') }}
+                {% endif %}
+            {% endif %}
+        </section>
+    </div>
+    
+</div>
+{% include 'footer.html.twig' %}
+{% endblock %}

@@ -19,6 +19,20 @@ class LoginControllerTest extends WebTestCase
         );
     }
 
+    public function testForm(): void
+    {
+        $this->client = static::createClient();
+
+        $crawler = $this->client->request('GET', '/login');
+        $form = $crawler->selectButton('login')->form([
+            '_username' => 'admin@mail.com',
+            '_password' => 'Test1234?',
+        ]);
+        $this->client->submit($form);
+        $this->client->followRedirect();
+        $this->assertSelectorTextContains('h1', 'Déjà connecté');
+    }
+
     public function testLogout(): void
     {
         $this->client = static::createClient();

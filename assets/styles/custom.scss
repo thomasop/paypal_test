@@ -1,0 +1,120 @@
+header {
+    display: flex;
+}
+
+header figure {
+  display: flex;
+    flex: 1;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+figure figcaption {
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 18px;
+  color: black;
+}
+
+figure img {
+    width: 80px;
+}
+
+nav {
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 10%;
+    width: 100%;
+    
+}
+
+.header-link {
+    font-size: 18px;
+    color: black;
+    margin-left: 30px;
+}
+
+.header-link:hover {
+  transform: scale(1.02);
+}
+
+.sub-menu .header-link {
+  color: white !important;
+}
+
+.navbar-light, .navbar-nav, .nav-link {
+  color: black !important;
+}
+
+.form-header {
+    display: flex;
+}
+
+.navbar-light:hover, .navbar-nav:hover, .nav-link:hover {
+  color: orange !important;
+}
+
+.bg-light {
+  background-color: white !important;
+}
+
+nav ul {
+    display: flex;
+    justify-content: space-around;
+    list-style-type: none;
+}
+
+.navbar-collapse {
+  flex-grow: 0 !important;
+}
+
+@media screen and (min-width: 2559px) {
+  .header-link, figcaption {
+    font-size: 28px !important;
+  }
+  figure img {
+    width: 150px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .header-link, figcaption {
+    font-size: 16px !important;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  div.navbar-collapse{
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+  .header-link {
+    color: black;
+  }
+  .menu .header-link:hover {
+    color: orange !important;
+  }
+}
+
+.margin {
+    margin-left: 4%;
+}
+
+.carousel-test {
+    width: 900px;
+    height: 550px;
+}
+
+.height-friend {
+    height: 80%;
+}
+
+.margin-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.photo:hover {
+    transform: scale(2);
+
+}

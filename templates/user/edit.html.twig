@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block body %}
+{% include 'header.html.twig' %}
+{% include 'flash.html.twig' %}
+<main class="container">
+    <h1 class="text-center mt-5 mb-5">Edit User</h1>
+
+    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a class="btn btn-primary" href="{{ path('profile', {id: app.user.id}) }}">Profile</a>
+</main>
+    
+{% include 'footer.html.twig' %}
+{% endblock %}

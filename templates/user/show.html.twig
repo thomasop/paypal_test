@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+{% include 'header.html.twig' %}
+{% include 'flash.html.twig' %}
+<section>
+    <div class="container">
+        <div class="row">
+            <h1 class="mt-5 mb-5 text-center">{{ user.pseudo|capitalize }}</h1></br>
+            <div class="d-flex justify-content-around">
+                <a class="btn btn-primary" href="{{ path('update_user', {id: user.id }) }} ">Modifier</a>
+                {{ include('user/_delete_form.html.twig') }}
+            </div>
+                  
+        </div>
+    </div>
+{% include 'footer.html.twig' %}
+{% endblock %}

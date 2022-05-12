@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande passée{% endblock %}
+
+{% block body %}
+{% include 'header.html.twig' %}
+{% include 'flash.html.twig' %}
+    <div class="container">
+        <h1 class="text-center mt-5 mb-5">Commande passée</h1>
+
+        {% if orders | length > 0 %}
+        <table style="margin-top: 75px;" class="table">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix</th>
+                    <th>Quantité</th>
+                    <th>date</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set total = 0 %}
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.product }}</td>
+                        <td>{{ order.price }} €</td>
+                        <td>{{ order.quantity }}</td>
+                        <td>{{ order.date ? order.date|format_datetime(locale='fr',pattern="EEEE dd MMMM YYYY 'à' HH'h' mm'min'",timezone="Europe/Paris") : '' }} </td>
+                        <td>{{ order.price * order.quantity }} €</td>
+                        {% set calcul = order.price * order.quantity %}
+                        {% set total = total + calcul %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-rigth">Total : </td>
+                    <td>{{ total }} €</td>
+                </tr>
+            </tfoot>
+        </table>
+        {% if is_granted('ROLE_USER') %}
+            <div id="paypal-button-container" data-total="{{ total }}"></div>
+        {% else %}
+            <div class="d-flex ml-4">
+                <p class="mr-4">vous devez vous connecter pour affectuer le paiement :</p>
+                <a class="btn btn-outline-danger mb-4" style="color: black;" href="{{ path('app_login') }}">se connecter</a>
+            </div>
+        {% endif %}
+    {% else %}
+        <p style="margin-top: 75px;">Vous n'avez pas de commande passée !</p>
+    {% endif %}
+    </div>
+{% include 'footer.html.twig' %}
+{% endblock %}

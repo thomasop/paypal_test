@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande{% endblock %}
+
+{% block body %}
+{% include 'header.html.twig' %}
+{% include 'flash.html.twig' %}
+    <div class="container">
+        <h1 class="text-center mt-5 mb-5">Commande en cours</h1>
+
+        {% if orders | length > 0 %}
+        <table style="margin-top: 75px;" class="table">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix</th>
+                    <th></th>
+                    <th>Quantité</th>
+                    <th></th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.product }}</td>
+                        <td>{{ order.price }} €</td>
+                        <td><a class="btn btn-primary" href="{{ path('removeone_order', {'id': app.user.id, 'order': order.id}) }}">Moins</a></td>
+                        <td>{{ order.quantity }}</td>
+                        <td><a class="btn btn-primary" href="{{ path('addone_order', {'id': app.user.id, 'order': order.id}) }}">Plus</a></td>
+                        <td>{{ order.price * order.quantity }}</td>
+                        <td>
+                            <a href="{{ path('delete_order', {id: app.user.id, order: order.id}) }} " class="btn btn-danger btn-sm">
+                                Supprimer
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-rigth">Total : </td>
+                    <td>{{ total }} €</td>
+                    <td>
+                        <form method="post" action="{{ path('delete_all_order', {id: app.user.id}) }}" onsubmit="return confirm('Etes vous sûre de vouloir supprimer votre commande ?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_orders') }}">
+                            <button class="btn btn-danger">Supprimer la commande</button>
+                        </form>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        {% if is_granted('ROLE_USER') %}
+            <div id="paypal-button-container"></div>
+        {% else %}
+            <div class="d-flex ml-4">
+                <p class="mr-4">vous devez vous connecter pour affectuer le paiement :</p>
+                <a class="btn btn-outline-danger mb-4" style="color: black;" href="{{ path('app_login') }}">se connecter</a>
+            </div>
+        {% endif %}
+    {% else %}
+        <p style="margin-top: 75px;">Vous n'avez pas de commande en cours !</p>
+    {% endif %}
+    </div>
+{% include 'footer.html.twig' %}
+{% endblock %}
+{% block javascripts %}
+<script>
+    var total = '{{ total }}';
+    var user = '{{ app.user.id }}';
+    paypal.Buttons({
+        createOrder: (data, actions) => {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '0.10' // Can also reference a variable or function
+                    }
+                }]
+            });
+        },
+        onApprove: (data, actions) => {
+            return actions.order.capture().then(function(orderData) {
+                // Successful capture! For dev/demo purposes:
+                const transaction = orderData.purchase_units[0].payments.captures[0];
+                alert(`Transaction ${transaction.status}: ${transaction.id}`);
+                window.location.href = "http://127.0.0.1:8000/orders/accept/" + user;
+            });
+            }
+    }).render('#paypal-button-container');
+    </script>
+{% endblock %}

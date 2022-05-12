@@ -4,7 +4,7 @@
 
     class Paging
     {
-        public function pagingComments($page, $comments)
+        public function pagingComments($page, $comments): array
         {
             $paging = array(
                 'page' => $page,

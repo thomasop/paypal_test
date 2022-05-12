@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CartController!
+{% endblock %}
+
+{% block body %}
+{% include 'header.html.twig' %}
+{% include 'flash.html.twig' %}
+<div class="container">
+    <div class="text-center bg-light p-3 mt-5">
+        <h1>Votre panier</h1>
+    </div>
+    {% if items | length > 0 %}
+        <table style="margin-top: 75px;" class="table">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix</th>
+                    <th></th>
+                    <th>Quantité</th>
+                    <th></th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>{{ item.product.title }}</td>
+                        <td>{{ item.product.price }} €</td>
+                        <td><a class="btn btn-danger" href="{{ path('cart_removeOne', {'id': item.product.id}) }}">Moins</a></td>
+                        <td>{{ item.quantity }}
+                        <td><a class="btn btn-primary" href="{{ path('cart_addOne', {'id': item.product.id}) }}">Plus</a></td>
+                        <td>{{ item.product.price * item.quantity }}</td>
+                        <td>
+                            <a href="{{ path('cart_remove', {'id': item.product.id}) }}" class="btn btn-danger btn-sm">
+                                Supprimer
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-rigth">Total : </td>
+                    <td>{{ total }} €</td>
+                </tr>
+            </tfoot>
+        </table>
+        {% if is_granted('ROLE_USER') %}
+            <a class="btn btn-primary" href="{{ path('app_order') }} ">Valider la commande et payer</a>
+        {% else %}
+            <div class="d-flex ml-4">
+                <p class="mr-4">vous devez vous connecter pour affectuer le paiement :</p>
+                <a class="btn btn-outline-danger mb-4" style="color: black;" href="{{ path('app_login') }}">se connecter</a>
+            </div>
+        {% endif %}
+    {% else %}
+        <p style="margin-top: 75px;">Surprise, c'est vide !</p>
+    {% endif %}
+    <div>
+        <a class="btn btn-outline-primary mt-4 ml-5 mb-4" style="color: black;" href="{{ path('product')}}">retour a la liste des produits</a>
+    </div>
+</div>
+{% include 'footer.html.twig' %}
+{% endblock %}

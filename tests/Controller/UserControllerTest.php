@@ -130,7 +130,6 @@ class UserControllerTest extends WebTestCase
 
         $userRepository = static::getContainer()->get(UserRepository::class);
         $testUser = $userRepository->findOneByEmail('admin@mail.com');
-
         $this->client->loginUser($testUser);
         $this->client->request('GET', '/user/admin/delete/1');
         static::assertEquals(

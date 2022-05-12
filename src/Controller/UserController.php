@@ -11,7 +11,9 @@ use App\Form\UserSearchType;
 use App\Form\RegistrationType;
 use App\Handler\FormUserHandler;
 use App\Repository\UserRepository;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -26,12 +28,15 @@ class UserController extends AbstractController
     private $formUserHandler;
     /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var MailerInterface */
+    private $mailer;
 
-    public function __construct(UserRepository $userRepository, FormUserHandler $formUserHandler, TokenStorageInterface $tokenStorage)
+    public function __construct(UserRepository $userRepository, FormUserHandler $formUserHandler, TokenStorageInterface $tokenStorage, MailerInterface $mailer)
     {
         $this->userRepository = $userRepository;
         $this->formUserHandler = $formUserHandler;
         $this->tokenStorage = $tokenStorage;
+        $this->mailer = $mailer;
     }
 
     #[route('/user/display', name: 'user_index')]
@@ -73,6 +78,18 @@ class UserController extends AbstractController
         $form = $this->createForm(RegistrationType::class, $user);
 
         if ($this->formUserHandler->new($form, $user) === true) {
+            $message = (new TemplatedEmail())
+                ->from('thomasdasilva010@gmail.com')
+                ->to(htmlspecialchars($form->get('email')->getData()))
+                ->subject('vérification email')
+
+                ->htmlTemplate('user/confirmationEmail.html.twig')
+                ->context([
+                    'token' => $user->getToken(),
+                    'expiration_date' => new \DateTime('+1 days'),
+                ])
+                ;
+            $this->mailer->send($message);
             $this->addFlash(
                 'success',
                 'Compte créé, veuillez verifier votre email pour activer votre compte !'

@@ -46,18 +46,6 @@ class FormUserHandler
             );
             $user->setToken($this->generateToken());
             $this->entityManager->Add($user);
-            $message = (new TemplatedEmail())
-                ->from('thomasdasilva010@gmail.com')
-                ->to(htmlspecialchars($form->get('email')->getData()))
-                ->subject('vérification email')
-
-                ->htmlTemplate('user/confirmationEmail.html.twig')
-                ->context([
-                    'token' => $user->getToken(),
-                    'expiration_date' => new \DateTime('+1 days'),
-                ])
-                ;
-            $this->mailer->send($message);
             return true;
         }
         return false;

@@ -39,13 +39,12 @@ class UserControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
         $crawler = $this->client->request('GET', '/register');
-        $buttonCrawlerNode = $crawler->selectButton('register');
-        $form = $buttonCrawlerNode->form();
-        $form['registration[pseudo]'] = "testq";
-        $form['registration[email]'] = "test@mail.com";
-        $form['registration[password][first]'] = "Test1234?";
-        $form['registration[password][second]'] = "Test1234?";
-        $this->client->submit($form);
+        $this->client->submitForm('register', [
+            'registration[pseudo]' => 'nobm',
+            'registration[email]' => 'nobm@mail.com',
+            'registration[password][first]' => 'Test1234?',
+            'registration[password][second]' => 'Test1234?',
+        ]);
         $this->assertResponseRedirects();
         $this->client->followRedirect();
         $this->assertSelectorExists('.alert.alert-success');

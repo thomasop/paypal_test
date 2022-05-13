@@ -3,13 +3,12 @@
 namespace App\Handler;
 
 use App\Entity\User;
-use App\Tool\FileUploader;
-use App\Tool\EntityManager;
 use App\Repository\UserRepository;
-use Symfony\Component\Form\FormInterface;
+use App\Tool\EntityManager;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class FormUserHandler
@@ -46,8 +45,10 @@ class FormUserHandler
             );
             $user->setToken($this->generateToken());
             $this->entityManager->Add($user);
+
             return true;
         }
+
         return false;
     }
 
@@ -56,7 +57,7 @@ class FormUserHandler
         $form->handleRequest($this->request->getCurrentRequest());
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $form->get('email')->getData();
-            $user = $this->userRepository->findOneBy(["email" => $email]);
+            $user = $this->userRepository->findOneBy(['email' => $email]);
             if ($user) {
                 $user->setToken($this->generateToken());
 
@@ -73,10 +74,13 @@ class FormUserHandler
                     ])
                     ;
                 $this->mailer->send($message);
+
                 return true;
             }
+
             return $user;
         }
+
         return false;
     }
 
@@ -93,11 +97,13 @@ class FormUserHandler
                     )
                 );
                 $this->entityManager->Add($user);
+
                 return true;
             } elseif (!preg_match('#^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$#', $form->get('password')->getData())) {
                 return 'erreur';
             }
         }
+
         return false;
     }
 
@@ -115,8 +121,10 @@ class FormUserHandler
             $pseudo = $form->get('pseudo')->getData();
             $user->setPseudo($pseudo);
             $this->entityManager->update();
+
             return true;
         }
+
         return false;
     }
 

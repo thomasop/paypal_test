@@ -2,13 +2,12 @@
 
 namespace App\Handler;
 
-use DateTime;
-use App\Entity\User;
 use App\Entity\Order;
-use App\Tool\EntityManager;
-use App\Handler\FormCartController;
+use App\Entity\User;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
+use App\Tool\EntityManager;
+use DateTime;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class FormOrderHandler
@@ -47,8 +46,10 @@ class FormOrderHandler
                 $this->entityManager->Add($order);
                 $this->formCartController->remove($key);
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -60,6 +61,7 @@ class FormOrderHandler
             $calcul = $test->getPrice() * $test->getQuantity();
             $total += $calcul;
         }
+
         return [$order, $total];
     }
 
@@ -81,7 +83,8 @@ class FormOrderHandler
         }
     }
 
-    public function delete(Order $order): void {
+    public function delete(Order $order): void
+    {
         $this->entityManager->remove($order);
     }
 
@@ -89,20 +92,19 @@ class FormOrderHandler
     {
         $more = 0;
         $quantity = $orderEntity->getQuantity();
-        $more += $quantity + 1 ;
+        $more += $quantity + 1;
         $orderEntity->setQuantity($more);
         $this->entityManager->update();
     }
 
     public function removeOne(Order $orderEntity): void
     {
-        if ($orderEntity->getQuantity() > 1 ) {
+        if ($orderEntity->getQuantity() > 1) {
             $more = 0;
             $quantity = $orderEntity->getQuantity();
-            $more += $quantity - 1 ;
+            $more += $quantity - 1;
             $orderEntity->setQuantity($more);
             $this->entityManager->update();
         }
-        
     }
 }

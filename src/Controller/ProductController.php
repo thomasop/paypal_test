@@ -7,11 +7,11 @@ use App\Form\ProductType;
 use App\Handler\FormProductHandler;
 use App\Repository\ProductRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class ProductController extends AbstractController
 {
@@ -29,19 +29,20 @@ class ProductController extends AbstractController
         $product = $productRepository->findProducts();
         $productEntity = new Product();
         $form = $this->createForm(ProductType::class, $productEntity);
-        if ($this->formProductHandler->add($form, $productEntity) === true) {
-            
+        if (true === $this->formProductHandler->add($form, $productEntity)) {
             $this->addFlash('success', 'Produit ajouté !');
+
             return $this->redirectToRoute('product');
         }
+
         return $this->render('product/index.html.twig', [
             'product' => $product,
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/produit/{id}', name: 'prod', requirements: ["id" => "\d+"])]
-    #[ParamConverter('product', class: 'App\Entity\Product', options: ["mapping" => ["id" => "id"]])]
+    #[Route('/produit/{id}', name: 'prod', requirements: ['id' => "\d+"])]
+    #[ParamConverter('product', class: 'App\Entity\Product', options: ['mapping' => ['id' => 'id']])]
     public function product(Product $product): Response
     {
         return $this->render('product/product.html.twig', [
@@ -57,16 +58,18 @@ class ProductController extends AbstractController
             throw $this->createNotFoundException('Pas de produit trouvé avec l\'id '.$product->getId());
         } else {
             $form = $this->createForm(ProductType::class, $product);
-            if ($this->formProductHandler->update($form, $product) === true) {
+            if (true === $this->formProductHandler->update($form, $product)) {
                 $this->addFlash(
                     'success',
                     'Produit modifié!'
                 );
+
                 return $this->redirectToRoute('prod', ['id' => $product->getId()], Response::HTTP_SEE_OTHER);
             }
+
             return $this->renderForm('product/update.html.twig', [
                 'form' => $form,
-                'product' => $product
+                'product' => $product,
             ]);
         }
     }
@@ -81,8 +84,10 @@ class ProductController extends AbstractController
                 'success',
                 'Produit supprimé!'
             );
+
             return $this->redirectToRoute('product');
         }
+
         return $this->redirectToRoute('product');
     }
 }

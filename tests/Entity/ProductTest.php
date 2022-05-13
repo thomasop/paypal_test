@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
@@ -11,8 +13,8 @@ final class ProductTest extends KernelTestCase
     {
         $product = (new Product())
         ->setPrice(10)
-        ->setTitle("title")
-        ->setImage("image.jpg");
+        ->setTitle('title')
+        ->setImage('image.jpg');
         self::bootKernel();
         $error = self::getContainer()->get('validator')->validate($product);
         $this->assertCount(0, $error);
@@ -30,18 +32,18 @@ final class ProductTest extends KernelTestCase
     public function testTitle(): void
     {
         $product = new Product();
-        $title = "title";
+        $title = 'title';
 
         $product->setTitle($title);
-        $this->assertEquals("title", $product->getTitle());
+        $this->assertEquals('title', $product->getTitle());
     }
 
     public function testImage(): void
     {
         $product = new Product();
-        $image = "image.jpg";
+        $image = 'image.jpg';
 
         $product->setImage($image);
-        $this->assertEquals("image.jpg", $product->getImage());
+        $this->assertEquals('image.jpg', $product->getImage());
     }
 }

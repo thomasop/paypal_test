@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\tests\Entity;
 
@@ -10,9 +12,9 @@ class UserTest extends KernelTestCase
     public function test(): void
     {
         $user = (new User())
-        ->setEmail("test@mail.com")
-        ->setPassword("Test1234?")
-        ->setPseudo("pseudo");
+        ->setEmail('test@mail.com')
+        ->setPassword('Test1234?')
+        ->setPseudo('pseudo');
         self::bootKernel();
         $error = self::getContainer()->get('validator')->validate($user);
         $this->assertCount(0, $error);
@@ -21,27 +23,27 @@ class UserTest extends KernelTestCase
     public function testEmail(): void
     {
         $user = new User();
-        $mail = "test@mail.com";
+        $mail = 'test@mail.com';
 
         $user->setEmail($mail);
-        $this->assertEquals("test@mail.com", $user->getEmail());
+        $this->assertEquals('test@mail.com', $user->getEmail());
     }
 
     public function testPassword(): void
     {
         $user = new User();
-        $password = "Test1234?";
+        $password = 'Test1234?';
 
         $user->setPassword($password);
-        $this->assertEquals("Test1234?", $user->getPassword());
+        $this->assertEquals('Test1234?', $user->getPassword());
     }
 
     public function testpseudo(): void
     {
         $user = new User();
-        $pseudo = "test";
+        $pseudo = 'test';
 
         $user->setPseudo($pseudo);
-        $this->assertEquals("test", $user->getPseudo());
+        $this->assertEquals('test', $user->getPseudo());
     }
 }

@@ -4,16 +4,12 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Validator\Constraints\Image as Img;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RegistrationType extends AbstractType
 {
@@ -24,12 +20,12 @@ class RegistrationType extends AbstractType
                 'label' => 'Pseudo :',
             ])
             ->add('email', EmailType::class, [
-                'label' => 'Email :'
+                'label' => 'Email :',
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'required' => true,
-                'first_options'  => ['label' => 'Mot de passe :'],
+                'first_options' => ['label' => 'Mot de passe :'],
                 'second_options' => ['label' => 'Répéter le mot de passe :'],
                 'invalid_message' => 'Les mots de passe doivent etre similaires.',
             ])

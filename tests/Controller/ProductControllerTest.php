@@ -3,8 +3,8 @@
 namespace App\tests\Controller;
 
 use App\Repository\UserRepository;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductControllerTest extends WebTestCase
 {
@@ -31,8 +31,8 @@ class ProductControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/produit/modification/1');
         $buttonCrawlerNode = $crawler->selectButton('update');
         $form = $buttonCrawlerNode->form();
-        $form['product[title]'] = "test";
-        $form['product[image]'] = "image.jpg";
+        $form['product[title]'] = 'test';
+        $form['product[image]'] = 'image.jpg';
         $form['product[price]'] = 10;
         $this->client->submit($form);
         $this->assertResponseRedirects();

@@ -2,18 +2,16 @@
 
 namespace App\Entity;
 
-use App\Entity\Order;
 use App\Repository\UserRepository;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Index(fields: ["pseudo"], flags: ["fulltext"])]
+#[ORM\Index(fields: ['pseudo'], flags: ['fulltext'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -22,17 +20,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 255, unique: true)]
-    #[Assert\NotBlank(message: "Ce champ est requis !")]
+    #[Assert\NotBlank(message: 'Ce champ est requis !')]
     private $pseudo;
 
     #[ORM\Column(type: 'string')]
-    #[Assert\NotBlank(message: "Ce champ est requis !")]
-    #[Assert\Length(min: 8, max: 255, minMessage: "Votre email ne peut pas contenir moins que {{ limit }} caractères !", maxMessage: "Votre email ne peut pas contenir plus que {{ limit }} caractères !")]
-    #[Assert\Regex(pattern: "#^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$#", match: true, message: "Mot de passe incorrect: Une lettre en majuscule, minuscule, un chiffre et caractère speciaux attendu ainsi que 8 caractères minimum!")]
+    #[Assert\NotBlank(message: 'Ce champ est requis !')]
+    #[Assert\Length(min: 8, max: 255, minMessage: 'Votre email ne peut pas contenir moins que {{ limit }} caractères !', maxMessage: 'Votre email ne peut pas contenir plus que {{ limit }} caractères !')]
+    #[Assert\Regex(pattern: "#^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$#", match: true, message: 'Mot de passe incorrect: Une lettre en majuscule, minuscule, un chiffre et caractère speciaux attendu ainsi que 8 caractères minimum!')]
     private $password;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Assert\NotBlank(message: "Ce champ est requis !")]
+    #[Assert\NotBlank(message: 'Ce champ est requis !')]
     #[Assert\Email]
     private $email;
 
@@ -115,10 +113,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
-        
+
         //return array('ROLE_USER');
     }
-    
+
     public function getEnabled(): bool
     {
         return $this->enabled;
@@ -130,7 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-   
+
     /**
      * Returns the salt that was originally used to encode the password.
      *

@@ -3,21 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\UserType;
+use App\Form\RegistrationType;
 use App\Form\ResetType;
-use App\Tool\EntityManager;
 use App\Form\UserPseudoType;
 use App\Form\UserSearchType;
-use App\Form\RegistrationType;
+use App\Form\UserType;
 use App\Handler\FormUserHandler;
 use App\Repository\UserRepository;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Tool\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserController extends AbstractController
@@ -49,7 +49,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $pseudo = $form->get('pseudo')->getData();
             $users = $userRepository->search($pseudo);
-            if ($users != null) {
+            if (null != $users) {
                 $this->addFlash(
                     'success',
                     'Utilisateur trouvé!'
@@ -60,24 +60,26 @@ class UserController extends AbstractController
                     'Aucun utilisateur trouvé!'
                 );
             }
+
             return $this->render('user/index.html.twig', [
                 'users' => $users,
-                'form' => $form->createView()
+                'form' => $form->createView(),
             ]);
         }
+
         return $this->render('user/index.html.twig', [
             'users' => $users,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/register', name: 'app_register', methods: ["GET", "POST"])]
+    #[Route('/register', name: 'app_register', methods: ['GET', 'POST'])]
     public function new(): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationType::class, $user);
 
-        if ($this->formUserHandler->new($form, $user) === true) {
+        if (true === $this->formUserHandler->new($form, $user)) {
             $message = (new TemplatedEmail())
                 ->from('thomasdasilva010@gmail.com')
                 ->to(htmlspecialchars($form->get('email')->getData()))
@@ -94,8 +96,10 @@ class UserController extends AbstractController
                 'success',
                 'Compte créé, veuillez verifier votre email pour activer votre compte !'
             );
+
             return $this->redirectToRoute('app_login');
         }
+
         return $this->render('form/formuser.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -104,12 +108,13 @@ class UserController extends AbstractController
     #[Route('/verify-email/{token}', name: 'app_verify_email')]
     public function verifyUserEmail($token): Response
     {
-        $user = $this->userRepository->findOneBy(["token" => $token]);
+        $user = $this->userRepository->findOneBy(['token' => $token]);
         $this->formUserHandler->verifyUserEmail($user);
         $this->addFlash(
             'success',
             'Compte valide, connectez vous !'
         );
+
         return $this->redirectToRoute('app_login');
     }
 
@@ -118,11 +123,12 @@ class UserController extends AbstractController
     {
         $user = new User();
         $form = $this->createForm(UserType::class);
-        if ($this->formUserHandler->forgotPassword($form, $user) == true) {
+        if (true == $this->formUserHandler->forgotPassword($form, $user)) {
             $this->addFlash(
                 'success',
                 'Adresse mail trouvé, veuillez verifier votre email pour changer votre mot de passe!'
             );
+
             return $this->redirectToRoute('app_login');
         }
         if (empty($this->formUserHandler->forgotPassword($form, $user))) {
@@ -130,8 +136,10 @@ class UserController extends AbstractController
                 'success',
                 'Adresse mail pas trouvé, rentrez une adresse mail valide!!'
             );
+
             return $this->redirectToRoute('forgot_password');
         }
+
         return $this->render('form/formforgotpassword.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -140,16 +148,17 @@ class UserController extends AbstractController
     #[Route('/reset-password/{token}', name: 'reset_password')]
     public function resetPassword($token): Response
     {
-        $user = $this->userRepository->findOneBy(["token" => $token]);
+        $user = $this->userRepository->findOneBy(['token' => $token]);
         if ($user) {
             $form = $this->createForm(ResetType::class);
-            if ($this->formUserHandler->resetPassword($form, $user) == true) {
+            if (true == $this->formUserHandler->resetPassword($form, $user)) {
                 $this->addFlash(
                     'success',
                     'Mot de passe modifié !'
                 );
+
                 return $this->redirectToRoute('app_login');
-            } elseif ($this->formUserHandler->resetPassword($form, $user) == 'erreur') {
+            } elseif ('erreur' == $this->formUserHandler->resetPassword($form, $user)) {
                 $this->addFlash(
                     'success',
                     'Mot de passe incorrect: Une lettre en majuscule, minuscule, un chiffre et caractère speciaux attendu ainsi que 8 caractères minimum!'
@@ -160,10 +169,12 @@ class UserController extends AbstractController
                 'success',
                 'Vous n\'avez pas accès à cette page!'
             );
+
             return $this->redirectToRoute('app_login');
         }
+
         return $this->render('form/formresetpassword.html.twig', [
-                'form' => $form->createView()
+                'form' => $form->createView(),
             ]);
     }
 
@@ -171,17 +182,16 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_USER', statusCode: 404, message: 'Vous n\'avez pas acces a cette page!')]
     public function show(User $user): Response
     {
-        if ($user)
-        {
+        if ($user) {
             return $this->render('user/show.html.twig', [
                 'user' => $user,
-            
             ]);
         }
         $this->addFlash(
             'success',
             'Vous n\'avez pas accès à cette page!'
         );
+
         return $this->redirectToRoute('product');
     }
 
@@ -189,17 +199,17 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_USER', statusCode: 404, message: 'Vous n\'avez pas acces a cette page!')]
     public function edit(User $user): Response
     {
-        if($user)
-        {
+        if ($user) {
             $form = $this->createForm(UserPseudoType::class, $user);
-            if($this->formUserHandler->edit($form, $user) === true)
-            {
+            if (true === $this->formUserHandler->edit($form, $user)) {
                 $this->addFlash(
                     'success',
                     'Pseudo modifié!'
                 );
+
                 return $this->redirectToRoute('profile', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
             }
+
             return $this->render('user/edit.html.twig', [
                 'form' => $form->createView(),
             ]);
@@ -208,6 +218,7 @@ class UserController extends AbstractController
             'success',
             'Vous n\'avez pas accès à cette page!'
         );
+
         return $this->redirectToRoute('product');
     }
 
@@ -220,6 +231,7 @@ class UserController extends AbstractController
         }
         $request->getSession()->invalidate();
         $this->tokenStorage->setToken();
+
         return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
     }
 
@@ -230,7 +242,8 @@ class UserController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);
         }
-        $this->addFlash('success', 'Utilisateur ' . $user->getPseudo() . ' supprimé');
+        $this->addFlash('success', 'Utilisateur '.$user->getPseudo().' supprimé');
+
         return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
@@ -11,7 +13,7 @@ final class OrderTest extends KernelTestCase
     public function test(): void
     {
         $order = (new Order())
-        ->setProduct("Test")
+        ->setProduct('Test')
         ->setPrice(10)
         ->setQuantity(2)
         ->setDate(new DateTime('now'))
@@ -24,10 +26,10 @@ final class OrderTest extends KernelTestCase
     public function testProduct(): void
     {
         $order = new Order();
-        $product = "test";
+        $product = 'test';
 
         $order->setProduct($product);
-        $this->assertEquals("test", $order->getProduct());
+        $this->assertEquals('test', $order->getProduct());
     }
 
     public function testQuantity(): void

@@ -2,19 +2,14 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use App\Entity\Product;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\File;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class ProductType extends AbstractType
 {
@@ -22,7 +17,7 @@ class ProductType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, [
-                'label' => 'Titre :'
+                'label' => 'Titre :',
             ])
             ->add('image', FileType::class, [
                 'label' => 'Image :',
@@ -34,14 +29,14 @@ class ProductType extends AbstractType
                         'mimeTypes' => [
                             'image/png',
                             'image',
-                            'image/*'
+                            'image/*',
                         ],
                         'mimeTypesMessage' => 'Please upload a valid PDF document',
-                    ])
+                    ]),
                 ],
             ])
             ->add('price', NumberType::class, [
-                'label' => 'Prix :'
+                'label' => 'Prix :',
             ])
             ;
     }

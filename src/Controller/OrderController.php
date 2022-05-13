@@ -2,15 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Entity\Order;
+use App\Entity\User;
 use App\Handler\FormOrderHandler;
 use App\Repository\OrderRepository;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class OrderController extends AbstractController
@@ -37,9 +37,10 @@ class OrderController extends AbstractController
     public function index(): Response
     {
         $panier = $this->session->get('panier');
-        if ($this->formOrderHandler->index($panier) === true) {
+        if (true === $this->formOrderHandler->index($panier)) {
             return $this->redirectToRoute('display_order', ['id' => $this->tokenStorageInterface->getToken()->getUser()]);
         }
+
         return $this->redirectToRoute('cart_index');
     }
 
@@ -48,6 +49,7 @@ class OrderController extends AbstractController
     public function display(User $user): Response
     {
         $order = $this->formOrderHandler->display($user);
+
         return $this->render('order/index.html.twig', [
             'orders' => $order[0],
             'total' => $order[1],
@@ -72,6 +74,7 @@ class OrderController extends AbstractController
             'success',
             'Commande en cours supprimé !'
         );
+
         return $this->redirectToRoute('product');
     }
 
@@ -84,8 +87,9 @@ class OrderController extends AbstractController
             'success',
             'Paiement accepté !'
         );
+
         return $this->redirectToRoute('display_order_history', [
-            'id' => $user
+            'id' => $user,
         ]);
     }
 
@@ -97,14 +101,15 @@ class OrderController extends AbstractController
             $this->formOrderHandler->addOne($order);
             $this->addFlash(
                 'success',
-                'Produit : ' . $order->getProduct() . ' => quantité augmenté !'
+                'Produit : '.$order->getProduct().' => quantité augmenté !'
             );
+
             return $this->redirectToRoute('display_order', [
-                'id' => $user
+                'id' => $user,
             ]);
         }
+
         return $this->redirectToRoute('product');
-        
     }
 
     #[Route('/order/delete/{id}/{order}', name: 'delete_order')]
@@ -117,12 +122,13 @@ class OrderController extends AbstractController
                 'success',
                 'Produit supprimé de la commande en cours !'
             );
+
             return $this->redirectToRoute('display_order', [
-                'id' => $user
+                'id' => $user,
             ]);
         }
+
         return $this->redirectToRoute('product');
-        
     }
 
     #[Route('/order/removeone/{id}/{order}', name: 'removeone_order')]
@@ -133,13 +139,14 @@ class OrderController extends AbstractController
             $this->formOrderHandler->removeOne($order);
             $this->addFlash(
                 'success',
-                'Produit : ' . $order->getProduct() . ' => quantité diminué !'
+                'Produit : '.$order->getProduct().' => quantité diminué !'
             );
+
             return $this->redirectToRoute('display_order', [
-                'id' => $user
+                'id' => $user,
             ]);
         }
+
         return $this->redirectToRoute('product');
-        
     }
 }

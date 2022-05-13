@@ -3,16 +3,13 @@
 namespace App\tests\Controller;
 
 use App\Repository\UserRepository;
-use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
+use Symfony\Component\HttpFoundation\Response;
 
 class OrderControllerTest extends WebTestCase
 {
     private $client = null;
-    
+
     public function testDisplay()
     {
         $this->client = static::createClient();

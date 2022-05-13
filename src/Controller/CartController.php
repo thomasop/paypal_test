@@ -3,12 +3,10 @@
 namespace App\Controller;
 
 use App\Handler\FormCartController;
-use App\Repository\ProductRepository;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class CartController extends AbstractController
 {
@@ -25,6 +23,7 @@ class CartController extends AbstractController
     public function index(): Response
     {
         $total = $this->formCartController->index();
+
         return $this->render('cart/cart.html.twig', [
             'items' => $total[0],
             'total' => $total[1],
@@ -41,8 +40,8 @@ class CartController extends AbstractController
             'success',
             'Produit ajouté au panier !'
         );
-        return $this->redirectToRoute("cart_index");
 
+        return $this->redirectToRoute('cart_index');
     }
 
     #[route('/panier/addone/{id}', name: 'cart_addOne')]
@@ -54,11 +53,11 @@ class CartController extends AbstractController
             'success',
             'Quantité augmenté !'
         );
-        return $this->redirectToRoute("cart_index");
 
+        return $this->redirectToRoute('cart_index');
     }
 
-    #[route('/panier/remove/{id}', name: 'cart_remove', requirements: ["id" => "\d+"])]
+    #[route('/panier/remove/{id}', name: 'cart_remove', requirements: ['id' => "\d+"])]
     #[IsGranted('ROLE_USER', statusCode: 404, message: 'Vous n\'avez pas accès à cette page')]
     public function remove(int $id): Response
     {
@@ -67,10 +66,11 @@ class CartController extends AbstractController
             'success',
             'Produit supprimé du panier !'
         );
-        return $this->redirectToRoute("cart_index");
+
+        return $this->redirectToRoute('cart_index');
     }
 
-    #[route('/panier/removeone/{id}', name: 'cart_removeOne', requirements: ["id" => "\d+"])]
+    #[route('/panier/removeone/{id}', name: 'cart_removeOne', requirements: ['id' => "\d+"])]
     #[IsGranted('ROLE_USER', statusCode: 404, message: 'Vous n\'avez pas accès à cette page')]
     public function removeOne(int $id): Response
     {
@@ -79,6 +79,7 @@ class CartController extends AbstractController
             'success',
             'Quantité diminué !'
         );
-        return $this->redirectToRoute("cart_index");
+
+        return $this->redirectToRoute('cart_index');
     }
 }

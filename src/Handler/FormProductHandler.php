@@ -4,14 +4,10 @@ namespace App\Handler;
 
 use App\Entity\Product;
 use App\Tool\DeleteFile;
-use App\Tool\FileUpload;
 use App\Tool\EntityManager;
-use App\Tool\ImageOptimizer;
-use Intervention\Image\ImageManager;
+use App\Tool\FileUpload;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class FormProductHandler
 {
@@ -42,8 +38,10 @@ class FormProductHandler
                 $product->setImage($brochureFileName);
             }
             $this->entityManager->Add($product);
+
             return true;
         }
+
         return false;
     }
 
@@ -57,8 +55,10 @@ class FormProductHandler
                 $product->setImage($brochureFileName);
             }
             $this->entityManager->update();
+
             return true;
         }
+
         return false;
     }
 

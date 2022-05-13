@@ -3,9 +3,9 @@
 namespace App\Tool;
 
 use Intervention\Image\ImageManager;
-use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class FileUpload
 {
@@ -30,14 +30,15 @@ class FileUpload
             $manager
                 ->make($file->getPathname())
                 ->fit(300, 200)
-                ->save('../public/uploads/thumbnail/' . $fileName);
+                ->save('../public/uploads/thumbnail/'.$fileName);
             $manager
                 ->make($file->getPathname())
                 ->fit(500, 250)
-                ->save('../public/uploads/' . $fileName);
+                ->save('../public/uploads/'.$fileName);
         } catch (FileException $e) {
             // ... handle exception if something happens during file upload
         }
+
         return $fileName;
     }
 

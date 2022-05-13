@@ -2,14 +2,10 @@
 
 namespace App\Form;
 
-use App\Entity\User;
-use App\Entity\Comment;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserSearchType extends AbstractType
 {
@@ -17,7 +13,7 @@ class UserSearchType extends AbstractType
     {
         $builder
             ->add('pseudo', TextType::class, [
-                'required' => false
+                'required' => false,
             ])
         ;
     }

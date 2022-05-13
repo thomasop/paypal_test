@@ -17,7 +17,7 @@ class FormCartController
         $this->productRepository = $productRepository;
         $this->session = $session;
     }
-    
+
     public function index(): array
     {
         $panier = $this->session->get('panier', []);
@@ -42,12 +42,13 @@ class FormCartController
     {
         $panier = $this->session->get('panier', []);
         if (!empty($panier[$id])) {
-            $panier[$id]++;
+            ++$panier[$id];
         } else {
             $panier[$id] = 1;
         }
 
         $this->session->set('panier', $panier);
+
         return $panier;
     }
 
@@ -67,8 +68,8 @@ class FormCartController
 
         if (!empty($panier[$id])) {
             if ($panier[$id] > 1) {
-                $panier[$id]--;
-            } 
+                --$panier[$id];
+            }
         } else {
             $panier[$id] = 1;
         }
